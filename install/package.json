@@ -2,19 +2,19 @@
     "name": "nodebb",
     "license": "GPL-3.0",
     "description": "NodeBB Forum",
-    "version": "1.7.4",
+    "version": "1.7.5",
     "homepage": "http://www.nodebb.org",
     "repository": {
-      "type": "git",
-      "url": "https://github.com/NodeBB/NodeBB/"
+        "type": "git",
+        "url": "https://github.com/NodeBB/NodeBB/"
     },
     "main": "app.js",
     "scripts": {
-      "start": "node loader.js",
-      "lint": "eslint --cache ./nodebb .",
-      "pretest": "npm run lint",
-      "test": "nyc --reporter=html --reporter=text-summary mocha",
-      "coveralls": "nyc report --reporter=text-lcov | coveralls && rm -r coverage"
+        "start": "node loader.js",
+        "lint": "eslint --cache ./nodebb .",
+        "pretest": "npm run lint",
+        "test": "nyc --reporter=html --reporter=text-summary mocha",
+        "coveralls": "nyc report --reporter=text-lcov | coveralls && rm -r coverage"
     },
     "dependencies": {
         "ace-builds": "^1.2.9",
@@ -61,7 +61,7 @@
         "nconf": "^0.9.1",
         "nodebb-plugin-composer-default": "6.0.12",
         "nodebb-plugin-dbsearch": "2.0.9",
-        "nodebb-plugin-emoji": "2.0.9",
+        "nodebb-plugin-emoji": "^2.1.0",
         "nodebb-plugin-emoji-android": "2.0.0",
         "nodebb-plugin-markdown": "8.3.0",
         "nodebb-plugin-mentions": "2.2.3",
@@ -69,10 +69,10 @@
         "nodebb-plugin-spam-be-gone": "0.5.1",
         "nodebb-rewards-essentials": "0.0.11",
         "nodebb-theme-lavender": "5.0.1",
-        "nodebb-theme-persona": "7.2.20",
+        "nodebb-theme-persona": "7.2.16",
         "nodebb-theme-slick": "1.1.4",
-        "nodebb-theme-vanilla": "8.1.9",
-        "nodebb-widget-essentials": "4.0.2",
+        "nodebb-theme-vanilla": "8.1.7",
+        "nodebb-widget-essentials": "4.0.1",
         "nodemailer": "4.4.1",
         "passport": "^0.4.0",
         "passport-local": "1.0.0",
@@ -115,26 +115,26 @@
         "smtp-server": "^3.4.1"
     },
     "bugs": {
-      "url": "https://github.com/NodeBB/NodeBB/issues"
+        "url": "https://github.com/NodeBB/NodeBB/issues"
     },
     "engines": {
-      "node": ">=6"
+        "node": ">=6"
     },
     "maintainers": [
-      {
-        "name": "Andrew Rodrigues",
-        "email": "andrew@nodebb.org",
-        "url": "https://github.com/psychobunny"
-      },
-      {
-        "name": "Julian Lam",
-        "email": "julian@nodebb.org",
-        "url": "https://github.com/julianlam"
-      },
-      {
-        "name": "Barış Soner Uşaklı",
-        "email": "baris@nodebb.org",
-        "url": "https://github.com/barisusakli"
-      }
+        {
+            "name": "Andrew Rodrigues",
+            "email": "andrew@nodebb.org",
+            "url": "https://github.com/psychobunny"
+        },
+        {
+            "name": "Julian Lam",
+            "email": "julian@nodebb.org",
+            "url": "https://github.com/julianlam"
+        },
+        {
+            "name": "Barış Soner Uşaklı",
+            "email": "baris@nodebb.org",
+            "url": "https://github.com/barisusakli"
+        }
     ]
-  }
+}
