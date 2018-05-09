@@ -1,5 +1,5 @@
 # The base image is the latest 8.x node (LTS)
-FROM node:8.9.0
+FROM node:9
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
