@@ -12,6 +12,7 @@ var nconf = require('nconf');
 var url = require('url');
 var errorText;
 
+var packageInfo = require('../../package');
 
 nconf.file({ file: path.join(__dirname, '../../config.json') });
 nconf.defaults({
@@ -120,6 +121,8 @@ before(function (done) {
 			nconf.set('theme_config', path.join(nconf.get('themes_path'), 'nodebb-theme-persona', 'theme.json'));
 			nconf.set('bcrypt_rounds', 1);
 
+			nconf.set('version', packageInfo.version);
+
 			meta.dependencies.check(next);
 		},
 		function (next) {
@@ -202,7 +205,7 @@ function setupDefaultConfigs(meta, next) {
 
 function giveDefaultGlobalPrivileges(next) {
 	var privileges = require('../../src/privileges');
-	privileges.global.give(['chat', 'upload:post:image'], 'registered-users', next);
+	privileges.global.give(['chat', 'upload:post:image', 'signature'], 'registered-users', next);
 }
 
 function enableDefaultPlugins(callback) {

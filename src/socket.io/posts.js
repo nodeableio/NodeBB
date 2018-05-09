@@ -20,6 +20,7 @@ require('./posts/move')(SocketPosts);
 require('./posts/votes')(SocketPosts);
 require('./posts/bookmarks')(SocketPosts);
 require('./posts/tools')(SocketPosts);
+require('./posts/diffs')(SocketPosts);
 
 SocketPosts.reply = function (socket, data, callback) {
 	if (!data || !data.tid || (parseInt(meta.config.minimumPostLength, 10) !== 0 && !data.content)) {
@@ -58,7 +59,7 @@ function postReply(socket, data, callback) {
 
 			next(null, postData);
 
-			websockets.in('uid_' + socket.uid).emit('event:new_post', result);
+			socket.emit('event:new_post', result);
 
 			user.updateOnlineUsers(socket.uid);
 

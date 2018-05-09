@@ -157,6 +157,11 @@ function completeConfigSetup(config, next) {
 		}
 	}
 
+	// Add package_manager object if set
+	if (nconf.get('package_manager')) {
+		config.package_manager = nconf.get('package_manager');
+	}
+
 	nconf.overrides(config);
 	async.waterfall([
 		function (next) {
@@ -356,7 +361,7 @@ function createGlobalModeratorsGroup(next) {
 
 function giveGlobalPrivileges(next) {
 	var privileges = require('./privileges');
-	privileges.global.give(['chat', 'upload:post:image'], 'registered-users', next);
+	privileges.global.give(['chat', 'upload:post:image', 'signature'], 'registered-users', next);
 }
 
 function createCategories(next) {
@@ -451,11 +456,11 @@ function enableDefaultPlugins(next) {
 
 	if (customDefaults && customDefaults.length) {
 		try {
-			customDefaults = JSON.parse(customDefaults);
+			customDefaults = Array.isArray(customDefaults) ? customDefaults : JSON.parse(customDefaults);
 			defaultEnabled = defaultEnabled.concat(customDefaults);
 		} catch (e) {
 			// Invalid value received
-			winston.warn('[install/enableDefaultPlugins] Invalid defaultPlugins value received. Ignoring.');
+			winston.info('[install/enableDefaultPlugins] Invalid defaultPlugins value received. Ignoring.');
 		}
 	}
 

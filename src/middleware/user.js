@@ -14,7 +14,7 @@ var controllers = {
 
 module.exports = function (middleware) {
 	middleware.authenticate = function (req, res, next) {
-		if (req.uid) {
+		if (req.loggedIn) {
 			return next();
 		}
 
@@ -44,7 +44,7 @@ module.exports = function (middleware) {
 		*/
 		async.waterfall([
 			function (next) {
-				if (!req.uid) {
+				if (!req.loggedIn) {
 					return setImmediate(next, null, false);
 				}
 
@@ -64,7 +64,7 @@ module.exports = function (middleware) {
 	}
 
 	middleware.checkGlobalPrivacySettings = function (req, res, next) {
-		if (!req.uid && !!parseInt(meta.config.privateUserInfo, 10)) {
+		if (!req.loggedIn && !!parseInt(meta.config.privateUserInfo, 10)) {
 			return middleware.authenticate(req, res, next);
 		}
 
@@ -202,7 +202,7 @@ module.exports = function (middleware) {
 	};
 
 	middleware.requireUser = function (req, res, next) {
-		if (req.uid) {
+		if (req.loggedIn) {
 			return next();
 		}
 
@@ -215,9 +215,24 @@ module.exports = function (middleware) {
 			return next();
 		}
 		if (!req.path.endsWith('/register/complete')) {
+			// Append user data if present
+			req.session.registration.uid = req.uid;
+
 			controllers.helpers.redirect(res, '/register/complete');
 		} else {
 			return next();
 		}
+	};
+
+	middleware.handleBlocking = function (req, res, next) {
+		user.blocks.is(res.locals.uid, req.uid, function (err, blocked) {
+			if (err) {
+				return next(err);
+			} else if (blocked) {
+				res.status(404).render('404', { title: '[[global:404.title]]' });
+			} else {
+				return next();
+			}
+		});
 	};
 };

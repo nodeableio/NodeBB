@@ -82,7 +82,6 @@ describe('Upload Controllers', function () {
 				assert.ifError(err);
 				assert.equal(res.statusCode, 200);
 				assert(Array.isArray(body));
-				assert(body[0].path);
 				assert(body[0].url);
 				done();
 			});
@@ -95,7 +94,6 @@ describe('Upload Controllers', function () {
 				assert.ifError(err);
 				assert.equal(res.statusCode, 200);
 				assert(Array.isArray(body));
-				assert(body[0].path);
 				assert(body[0].url);
 				meta.config.maximumImageWidth = oldValue;
 				done();
@@ -112,7 +110,6 @@ describe('Upload Controllers', function () {
 				assert.ifError(err);
 				assert.equal(res.statusCode, 200);
 				assert(Array.isArray(body));
-				assert(body[0].path);
 				assert(body[0].url);
 				done();
 			});
@@ -161,6 +158,41 @@ describe('Upload Controllers', function () {
 				assert.equal(err.message, '[[error:invalid-image]]');
 				done();
 			});
+		});
+
+		it('should delete users uploads if account is deleted', function (done) {
+			var jar;
+			var uid;
+			var url;
+			var file = require('../src/file');
+
+			async.waterfall([
+				function (next) {
+					user.create({ username: 'uploader', password: 'barbar' }, next);
+				},
+				function (_uid, next) {
+					uid = _uid;
+					helpers.loginUser('uploader', 'barbar', next);
+				},
+				function (jar, csrf_token, next) {
+					helpers.uploadFile(nconf.get('url') + '/api/post/upload', path.join(__dirname, '../test/files/test.png'), {}, jar, csrf_token, next);
+				},
+				function (res, body, next) {
+					assert(body);
+					assert(body[0].url);
+					url = body[0].url;
+
+					user.delete(1, uid, next);
+				},
+				function (next) {
+					var filePath = path.join(nconf.get('upload_path'), url.replace('/assets/uploads', ''));
+					file.exists(filePath, next);
+				},
+				function (exists, next) {
+					assert(!exists);
+					done();
+				},
+			], done);
 		});
 	});
 

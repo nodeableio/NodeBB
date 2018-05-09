@@ -50,11 +50,37 @@ helpers.getUserDataByUserSlug = function (userslug, callerUID, callback) {
 				ips: function (next) {
 					user.getIPs(uid, 4, next);
 				},
-				profile_links: function (next) {
+				profile_links: function (next) { // DEPRECATED, do not use
 					plugins.fireHook('filter:user.profileLinks', [], next);
 				},
 				profile_menu: function (next) {
-					plugins.fireHook('filter:user.profileMenu', { uid: uid, callerUID: callerUID, links: [] }, next);
+					plugins.fireHook('filter:user.profileMenu', {
+						uid: uid,
+						callerUID: callerUID,
+						links: [{
+							id: 'info',
+							route: 'info',
+							name: '[[user:account_info]]',
+							visibility: {
+								self: false,
+								other: false,
+								moderator: true,
+								globalMod: true,
+								admin: true,
+							},
+						}, {
+							id: 'consent',
+							route: 'consent',
+							name: '[[user:consent.title]]',
+							visibility: {
+								self: true,
+								other: false,
+								moderator: false,
+								globalMod: false,
+								admin: false,
+							},
+						}],
+					}, next);
 				},
 				groups: function (next) {
 					groups.getUserGroups([uid], next);
@@ -142,6 +168,7 @@ helpers.getUserDataByUserSlug = function (userslug, callerUID, callback) {
 			userData.websiteName = userData.website.replace(validator.escape('http://'), '').replace(validator.escape('https://'), '');
 			userData.followingCount = parseInt(userData.followingCount, 10) || 0;
 			userData.followerCount = parseInt(userData.followerCount, 10) || 0;
+			userData.blocksCount = parseInt(userData.blocksCount, 10) || 0;
 
 			userData.email = validator.escape(String(userData.email || ''));
 			userData.fullname = validator.escape(String(userData.fullname || ''));

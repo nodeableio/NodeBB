@@ -122,6 +122,7 @@
 	"enter_page_number": "Enter page number",
 	"upload_file": "Upload file",
 	"upload": "Upload",
+	"uploads": "Uploads",
 	"allowed-file-types": "Allowed file types are %1",
 
 	"unsaved-changes": "You have unsaved changes. Are you sure you wish to navigate away?",
@@ -134,5 +135,7 @@
 
 	"edited": "Edited",
 	"disabled": "Disabled",
-	"select": "Select"
+	"select": "Select",
+
+	"user-search-prompt": "Type something here to find users..."
 }

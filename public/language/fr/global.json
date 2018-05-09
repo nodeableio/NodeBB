@@ -54,8 +54,8 @@
     "posts": "Messages",
     "best": "Meilleurs",
     "votes": "Votes",
-    "upvoters": "Votes pour",
-    "upvoted": "Votes pour",
+    "upvoters": "Votes positifs",
+    "upvoted": "Votes positifs",
     "downvoters": "Votes contre",
     "downvoted": "Vote négatif",
     "views": "Vues",
@@ -97,6 +97,7 @@
     "enter_page_number": "Entrer un numéro de page",
     "upload_file": "Envoyer un fichier",
     "upload": "Envoyer",
+    "uploads": "Téléversements",
     "allowed-file-types": "Les types de fichiers autorisés sont : %1",
     "unsaved-changes": "Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir naviguer tout de même ?",
     "reconnecting-message": "Il semble que votre connexion ait été perdue, veuillez patienter pendant que nous vous re-connectons.",
@@ -106,5 +107,6 @@
     "cookies.learn_more": "En savoir plus",
     "edited": "Modifié",
     "disabled": "Désactivé",
-    "select": "Sélectionner"
+    "select": "Sélectionner",
+    "user-search-prompt": "Écrivez ici pour rechercher des utilisateurs ..."
 }

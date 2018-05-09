@@ -90,7 +90,7 @@ module.exports = function (SocketUser) {
 					return next(new Error('[[error:no-privileges]]'));
 				}
 
-				if ((!results.isAdmin || !results.isGlobalMod) && !isSelf) {
+				if (!isSelf && !(results.isAdmin || results.isGlobalMod)) {
 					return next(new Error('[[error:no-privileges]]'));
 				}
 
@@ -102,6 +102,13 @@ module.exports = function (SocketUser) {
 			},
 		], callback);
 	}
+
+	SocketUser.checkPassword = function (socket, data, callback) {
+		isPrivilegedOrSelfAndPasswordMatch(socket.uid, data, function (err) {
+			// Return a bool (without delayed response to prevent brute-force checking of password validity)
+			setTimeout(callback.bind(null, null, !err), 1000);
+		});
+	};
 
 	SocketUser.changePassword = function (socket, data, callback) {
 		if (!socket.uid) {
@@ -190,6 +197,24 @@ module.exports = function (SocketUser) {
 				}
 
 				next(null, userData);
+			},
+		], callback);
+	};
+
+	SocketUser.toggleBlock = function (socket, data, callback) {
+		async.waterfall([
+			function (next) {
+				user.blocks.can(data.uid, function (err, can) {
+					if (err || !can) {
+						return next(err || new Error('[[error:cannot-block-privileged]]'));
+					}
+
+					next();
+				});
+			},
+			async.apply(user.blocks.is, data.uid, socket.uid),
+			function (is, next) {
+				user.blocks[is ? 'remove' : 'add'](data.uid, socket.uid, next);
 			},
 		], callback);
 	};

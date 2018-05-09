@@ -88,15 +88,20 @@ SocketUser.reset.send = function (socket, email, callback) {
 	}
 
 	user.reset.send(email, function (err) {
-		if (err && err.message !== '[[error:invalid-email]]') {
-			return callback(err);
-		}
-		if (err && err.message === '[[error:invalid-email]]') {
-			winston.verbose('[user/reset] Invalid email attempt: ' + email);
-			return setTimeout(callback, 2500);
+		if (err) {
+			switch (err.message) {
+			case '[[error:invalid-email]]':
+				winston.warn('[user/reset] Invalid email attempt: ' + email + ' by IP ' + socket.ip + (socket.uid ? ' (uid: ' + socket.uid + ')' : ''));
+				err = null;
+				break;
+
+			case '[[error:reset-rate-limited]]':
+				err = null;
+				break;
+			}
 		}
 
-		callback();
+		setTimeout(callback.bind(err), 2500);
 	});
 };
 
@@ -334,4 +339,17 @@ SocketUser.setModerationNote = function (socket, data, callback) {
 			db.sortedSetAdd('uid:' + data.uid + ':moderation:notes', note.timestamp, JSON.stringify(note), next);
 		},
 	], callback);
+};
+
+SocketUser.deleteUpload = function (socket, data, callback) {
+	if (!data || !data.name || !data.uid) {
+		return callback(new Error('[[error:invalid-data]]'));
+	}
+	user.deleteUpload(socket.uid, data.uid, data.name, callback);
+};
+
+SocketUser.gdpr = {};
+
+SocketUser.gdpr.consent = function (socket, data, callback) {
+	user.setUserField(socket.uid, 'gdpr_consent', 1, callback);
 };

@@ -53,7 +53,7 @@
     "topics": "Темы",
     "posts": "Записи",
     "best": "Лучшие",
-    "votes": "Votes",
+    "votes": "Голоса",
     "upvoters": "Кому понравилось",
     "upvoted": "Понравилось",
     "downvoters": "Кому не понравилось",
@@ -97,6 +97,7 @@
     "enter_page_number": "Введите номер страницы",
     "upload_file": "Загрузить файл",
     "upload": "Загрузить",
+    "uploads": "Uploads",
     "allowed-file-types": "Разрешённые форматы файлов %1",
     "unsaved-changes": "У вас есть несохранённые изменения. Вы уверены, что хотите уйти?",
     "reconnecting-message": "Похоже, подключение к %1 было разорвано, подождите, пока мы пытаемся восстановить соединение.",
@@ -105,6 +106,7 @@
     "cookies.accept": "Понял",
     "cookies.learn_more": "Подробнее",
     "edited": "Отредактированный",
-    "disabled": "Disabled",
-    "select": "Select"
+    "disabled": "Отключено",
+    "select": "Выбрать",
+    "user-search-prompt": "Type something here to find users..."
 }

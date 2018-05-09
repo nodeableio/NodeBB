@@ -50,6 +50,7 @@ Controllers.reset = function (req, res, next) {
 					displayExpiryNotice: req.session.passwordExpired,
 					code: req.params.code,
 					minimumPasswordLength: parseInt(meta.config.minimumPasswordLength, 10),
+					minimumPasswordStrength: parseInt(meta.config.minimumPasswordStrength, 10),
 					breadcrumbs: helpers.buildBreadcrumbs([
 						{
 							text: '[[reset_password:reset_password]]',
@@ -113,7 +114,7 @@ Controllers.login = function (req, res, next) {
 		}
 		return res.redirect(nconf.get('relative_path') + data.authentication[0].url);
 	}
-	if (req.uid) {
+	if (req.loggedIn) {
 		user.getUserFields(req.uid, ['username', 'email'], function (err, user) {
 			if (err) {
 				return next(err);
@@ -166,7 +167,7 @@ Controllers.register = function (req, res, next) {
 			data.minimumUsernameLength = parseInt(meta.config.minimumUsernameLength, 10);
 			data.maximumUsernameLength = parseInt(meta.config.maximumUsernameLength, 10);
 			data.minimumPasswordLength = parseInt(meta.config.minimumPasswordLength, 10);
-			data.minimumPasswordStrength = parseInt(meta.config.minimumPasswordStrength || 0, 10);
+			data.minimumPasswordStrength = parseInt(meta.config.minimumPasswordStrength || 1, 10);
 			data.termsOfUse = termsOfUse.postData.content;
 			data.breadcrumbs = helpers.buildBreadcrumbs([{
 				text: '[[register:register]]',
@@ -196,7 +197,7 @@ Controllers.registerInterstitial = function (req, res, next) {
 			if (!data.interstitials.length) {
 				// No interstitials, redirect to home
 				delete req.session.registration;
-				return res.redirect('/');
+				return res.redirect(nconf.get('relative_path') + '/');
 			}
 			var renders = data.interstitials.map(function (interstitial) {
 				return async.apply(req.app.render.bind(req.app), interstitial.template, interstitial.data || {});
@@ -206,7 +207,7 @@ Controllers.registerInterstitial = function (req, res, next) {
 			async.parallel(renders, next);
 		},
 		function (sections) {
-			var errors = req.flash('error');
+			var errors = req.flash('errors');
 			res.render('registerComplete', {
 				title: '[[pages:registration-complete]]',
 				errors: errors,
@@ -233,6 +234,7 @@ Controllers.robots = function (req, res) {
 	} else {
 		res.send('User-agent: *\n' +
 			'Disallow: ' + nconf.get('relative_path') + '/admin/\n' +
+			'Disallow: ' + nconf.get('relative_path') + '/reset/\n' +
 			'Sitemap: ' + nconf.get('url') + '/sitemap.xml');
 	}
 };

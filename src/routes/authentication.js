@@ -20,7 +20,15 @@ Auth.initialize = function (app, middleware) {
 	app.use(passport.session());
 
 	app.use(function (req, res, next) {
-		req.uid = req.user ? parseInt(req.user.uid, 10) : 0;
+		var isSpider = req.isSpider();
+		req.loggedIn = !isSpider && !!req.user;
+		if (isSpider) {
+			req.uid = -1;
+		} else if (req.user) {
+			req.uid = parseInt(req.user.uid, 10);
+		} else {
+			req.uid = 0;
+		}
 		next();
 	});
 
@@ -58,7 +66,11 @@ Auth.reloadRoutes = function (callback) {
 					}));
 				}
 
-				router.get(strategy.callbackURL, passport.authenticate(strategy.name, {
+				router.get(strategy.callbackURL, function (req, res, next) {
+					// Trigger registration interstitial checks
+					req.session.registration = req.session.registration || {};
+					next();
+				}, passport.authenticate(strategy.name, {
 					successReturnToOrRedirect: nconf.get('relative_path') + (strategy.successUrl !== undefined ? strategy.successUrl : '/'),
 					failureRedirect: nconf.get('relative_path') + (strategy.failureUrl !== undefined ? strategy.failureUrl : '/login'),
 				}));

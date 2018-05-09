@@ -10,6 +10,7 @@ define('notifications', ['sounds', 'translator', 'components', 'navigator', 'ben
 		var notifContainer = components.get('notifications');
 		var notifTrigger = notifContainer.children('a');
 		var notifList = components.get('notifications/list');
+		var notifDropdownWrapper = notifTrigger.parents('.dropdown');
 
 		notifTrigger.on('click', function (e) {
 			e.preventDefault();
@@ -19,6 +20,10 @@ define('notifications', ['sounds', 'translator', 'components', 'navigator', 'ben
 
 			Notifications.loadNotifications(notifList);
 		});
+
+		if (notifDropdownWrapper.hasClass('open')) {
+			Notifications.loadNotifications(notifList);
+		}
 
 		notifList.on('click', '[data-nid]', function (ev) {
 			var notifEl = $(this);
@@ -70,14 +75,14 @@ define('notifications', ['sounds', 'translator', 'components', 'navigator', 'ben
 			var payload = {
 				alert_id: 'new_notif',
 				title: '[[notifications:new_notification]]',
-				timeout: 2000,
+				timeout: parseInt(config.notificationAlertTimeout, 10) || 5000,
 			};
 
 			if (notifData.path) {
 				payload.message = notifData.bodyShort;
 				payload.type = 'info';
 				payload.clickfn = function () {
-					if (notifData.path.startsWith('http') && notifData.path.startsWith('https')) {
+					if (notifData.path.startsWith('http') || notifData.path.startsWith('https')) {
 						window.location.href = notifData.path;
 					} else {
 						window.location.href = window.location.protocol + '//' + window.location.host + config.relative_path + notifData.path;
@@ -117,10 +122,9 @@ define('notifications', ['sounds', 'translator', 'components', 'navigator', 'ben
 	function scrollToPostIndexIfOnPage(notifEl) {
 		// Scroll to index if already in topic (gh#5873)
 		var pid = notifEl.attr('data-pid');
-		var tid = notifEl.attr('data-tid');
 		var path = notifEl.attr('data-path');
 		var postEl = components.get('post', 'pid', pid);
-		if (path.startsWith(config.relative_path + '/post/') && pid && postEl.length && ajaxify.data.template.topic && parseInt(ajaxify.data.tid, 10) === parseInt(tid, 10)) {
+		if (path.startsWith(config.relative_path + '/post/') && pid && postEl.length && ajaxify.data.template.topic) {
 			navigator.scrollToIndex(postEl.attr('data-index'), true);
 			return true;
 		}

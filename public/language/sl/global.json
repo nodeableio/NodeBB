@@ -97,6 +97,7 @@
     "enter_page_number": "Vnesi številko strani",
     "upload_file": "Prenesi datoteko",
     "upload": "Prenos",
+    "uploads": "Uploads",
     "allowed-file-types": "Dovoljene vrste datotek: %1",
     "unsaved-changes": "Nekatere spremembe niso shranjene. A res želite zapustiti stran?",
     "reconnecting-message": "Kaže, da je bila povezava s/z %1 prekinjena. Prosimo, počakajte, ponovno poskušamo vzpostaviti povezavo.",
@@ -106,5 +107,6 @@
     "cookies.learn_more": "Learn More",
     "edited": "Edited",
     "disabled": "Disabled",
-    "select": "Select"
+    "select": "Select",
+    "user-search-prompt": "Type something here to find users..."
 }

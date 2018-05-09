@@ -76,6 +76,7 @@ module.exports = function (Topics) {
 				search.search({
 					query: topicData.title,
 					searchIn: 'titles',
+					matchWords: 'any',
 					categories: [topicData.cid],
 					uid: uid,
 					page: 1,
@@ -101,7 +102,7 @@ module.exports = function (Topics) {
 			},
 			function (data, next) {
 				var tids = data.topics.filter(function (topic) {
-					return topic && !topic.deleted;
+					return topic && !topic.deleted && parseInt(tid, 10) !== parseInt(topic.tid, 10);
 				}).map(function (topic) {
 					return topic && parseInt(topic.tid, 10);
 				});
